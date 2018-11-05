@@ -179,6 +179,21 @@ func NewChromeDriverService(path string, port int, opts ...ServiceOption) (*Serv
 	return s, nil
 }
 
+// NewChromeDriverService starts a ChromeDriver instance in the background. // for chromedriver
+func NewChromeDriverService2(path string, port int, opts ...ServiceOption) (*Service, error) {
+	//cmd := exec.Command(path, "--port="+strconv.Itoa(port), "--url-base=wd/hub", "--verbose")
+	cmd := exec.Command(path, "--port="+strconv.Itoa(port), "--url-base=", "--silent")
+	s, err := newService(cmd, port, opts...)
+	if err != nil {
+		return nil, err
+	}
+	s.shutdownURLPath = "/shutdown"
+	if err := s.start(port); err != nil {
+		return nil, err
+	}
+	return s, nil
+}
+
 // NewIeDriverService starts a IeDriver instance in the background.
 func NewIeDriverService(path string, port int, opts ...ServiceOption) (*Service, error) {
 	cmd := exec.Command(path, "--port="+strconv.Itoa(port))
